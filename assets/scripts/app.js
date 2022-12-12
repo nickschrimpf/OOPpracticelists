@@ -38,9 +38,10 @@ class Component{
 };
 // USING INHERITENCE BY EXTENDING THE COMPONENT CLASS
 class Tooltip extends Component {
-    constructor(closeNotificationFn,listType){
+    constructor(closeNotificationFn,listType,message){
         console.log(listType)
         super(listType,true);
+        this.message = message;
         this.closeNotifier = closeNotificationFn;
         this.createToolTip();
        
@@ -51,17 +52,23 @@ class Tooltip extends Component {
     // BUT THIS APP IS SMALL AND THIS WILL BE A GREAT USE CASE FOR A FIELD SYNTAX 
     closeToolTip = () =>{
         this.detachToolTipElement();
-        this.closeNotifier()
+        this.closeNotifier();
     }
 
     createToolTip(){
+        // CREATE DIV FOR THE NEW TOOL TIP
         const tooltipElement = document.createElement('div');
+        // GIVE IT A className OF CARD FOR SOME CSS 
         tooltipElement.className = 'card';
-        tooltipElement.textContent = 'tool tip yo!';
+        // SETTING THE DOM MESSAGE FROM THE CONSTRUCTOR 
+        tooltipElement.textContent = this.message;
+        // ADDING THE EVENT LISTNER TO THE TOOLTIP FOR CLOSE
         tooltipElement.addEventListener('click',this.closeToolTip);
+        // SETTING THIS ELEMENT
         this.element = tooltipElement;
         console.log('tool tip ....');
-        this.attachToolTipElement()
+        // CALLING THE INHERITED ATTACH TOOL TIP METHOD FROM THE Component CLASS
+        this.attachToolTipElement();
     }
 };
 class ProjectItem{
@@ -109,8 +116,11 @@ class ProjectItem{
         if(this.hasActiveToolTip){
             return;
         };
+        // GET THE ELEMENT OF THE PROJECT
+        const projectElement = document.getElementById(this.id)
+        const tooltipMessage = projectElement.dataset.extraInfo
         // IF THERE IS NOT AN EXISTING TOOLTIP CREATE A NEW TOOL TIP WITH CALL BACK FUNCTION
-        const tooltip = new Tooltip(() => this.hasActiveToolTip = false,`${type}-projects`);
+        const tooltip = new Tooltip(() => this.hasActiveToolTip = false,`${type}-projects`,tooltipMessage);
         
         this.hasActiveToolTip = true;
     }
@@ -124,29 +134,21 @@ class ProjectItem{
         infoButton.addEventListener('click',
             this.showMoreInfoHandler.bind(this,this.listType)
         );
-    }
-}
+    };
+};
 class projectList{
     // LIST OF CURRENT PROJECTS 
     projects = [];
     // CREATING A LIST WE NEED A TYPE
     constructor(listType){
-        this.listType = listType
+        this.listType = listType;
         // GETTING EACH DOM NODE IN EACH LIST TYPE
         const listItems = document.querySelectorAll(`#${listType}-projects li`);
-        // console.log(listItems)
-
         // FOR EACH NODE CREATE A ProjectItem WITH ID AND A SWITCH HANDLER FUNCTION
         // TO BE USED ON CLICK WHEN WE NEED TO SWITCH PROJECTS FROM ONE LIST TO
         // ANOTHER BINDING THE FUNCTION TO THIS LIST
-        // ***WHEN THIS SWITCH PROJECT GET CALLED WE ARE GETING A POINTER EVENT NOT A CLICK
         for(const item of listItems){
-            // console.log(item)
-            // console.log("this")
-            // console.log(this)
-
-            this.projects.push(
-                
+            this.projects.push(  
                 new ProjectItem(item.id, this.switchProject.bind(this),this.listType)
             );
         }
@@ -161,8 +163,6 @@ class projectList{
 
     // CALLBACK FUNCTION CALLED FROM THE OTHER LIST INSTANCE
     addProject(project){
-        // console.log(this)
-        // console.log(project)
         // PUSHING IN THE ProjectItem FROM THE OTHER LIST
       this.projects.push(project);
         // DOMHelper WILL MOVE THE PROJECT FROM LIST TO LIST
@@ -174,8 +174,6 @@ class projectList{
     
     // CALLBACK FUNCITON FROM PROJECT ITEM TO REMOVE A PROJECT FROM ONE LIST TYPE AND ADD TO ANOTHER
     switchProject(projectId){
-        // console.log('switch project click handler this')
-        // console.log(this)
         // const pjtidx = this.project.findIndex(p => p.id === id)
         // this.projects.splice(idx,1)
         console.log(projectId)
