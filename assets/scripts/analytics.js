@@ -10,8 +10,16 @@
     // https://developer.mozilla.org/en-US/docs/Web/API/History_API
     // FINDOUT WHERE A USER HAS BEEN MOVE THEM BACK OR FORWARD AND GO()
     console.log(history)
-    // USING NAVIGATOR TO LOG USERS CURRENT LOCATION
+
+    // USING NAVIGATOR TO LOG USERS CURRENT LOCATION GET WHERE THEY ACTUALLY ARE!
     // https://developer.mozilla.org/en-US/docs/Web/API/Navigator
+    navigator.permissions.query({name:'geolocation'}).then((geolocation) => {
+        console.log(`notifications status is ${geolocation.state}`)
+        geolocation.onchange = () => {
+            console.log(`notifications status is now ${geolocation.state}`)
+        }
+    })
+  
     navigator.geolocation.getCurrentPosition((data)=>{
         console.log(data)
         console.log(navigator.onLine)
