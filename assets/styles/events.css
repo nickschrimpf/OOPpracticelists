@@ -44,7 +44,9 @@ body {
     /* clip-path: circle(40%); */
     border-radius: 100%;
   }
-
+  .highlight{
+    background-color: yellow;
+  }
   #infinateScroll{
     height: 600px;
   }
