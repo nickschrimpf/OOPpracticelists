@@ -7,27 +7,36 @@ class DOMHelper{
         return clonedElement
     };
     static moveElement(elementId, newDestinationSelector){
-        console.log(newDestinationSelector)
+        // GET THE ELEMENT FROM THE DOM
         const element = document.getElementById(elementId)
-        console.log(element)
+        // GET THE NEW DESITINATION LIST FROM THE DOM
         const newDestionation = document.querySelector(newDestinationSelector)
+        // APPEND THE EXISTING ELEMENT TO THE NEW DESTINATION WILL MOVE THE ELEMENT 
         newDestionation.append(element)
+        // MAKING SURE THE RECENTLY MOVED ELEMENT IS IN VIEW TO THE USER
+        element.scrollIntoView({behavior:"smooth"})
     };
 };
+// PROTO TYPE CLASS RESPONSABLE FOR MANAGING THE TOOL TIPS
 class Component{
-    constructor(hostElement,insertBefore = false){
-        if(hostElement){
-            this.hostElement = document.getElementById(hostElement);
+    constructor(hostElementId,insertBefore = false){
+        if(hostElementId){
+            this.hostElement = document.getElementById(hostElementId);
         }else{
             this.hostElement = document.body;
         }
         this.insertBefore = insertBefore
     }
+    // WHEN A TOOL TIP IS CLICK WE REMOVE IT BY CALLLING THIS FROM A SUB CLASS
     detachToolTipElement(){
         if(this.element){
             this.element.remove()
+            // OLDER BROWSERS WOULD REQUIRE 
+            // this.element.parentElement.removeChild(this.element)
         }
     }
+    // ATTACH A TOOL TIP TO THE DOM AND DEPENDING ON WHAT IS PASSED TO
+    // SUPER OF THE SUB CLASS WE INSERT BEFORE OR AFTER 
     attachToolTipElement(){
         console.log(this.hostElement)
         this.hostElement.insertAdjacentElement(
@@ -38,9 +47,9 @@ class Component{
 };
 // USING INHERITENCE BY EXTENDING THE COMPONENT CLASS
 class Tooltip extends Component {
-    constructor(closeNotificationFn,listType,message){
-        console.log(listType)
-        super(listType,true);
+    constructor(closeNotificationFn,message,id){
+        super(id);
+        this.id = id;
         this.message = message;
         this.closeNotifier = closeNotificationFn;
         this.createToolTip();
@@ -60,8 +69,39 @@ class Tooltip extends Component {
         const tooltipElement = document.createElement('div');
         // GIVE IT A className OF CARD FOR SOME CSS 
         tooltipElement.className = 'card';
+        // GET THE TOOLTIP TEMPLATE IN THE HTML PAGE
+        const toolTipTemplate = document.getElementById('tooltip');
+        // IMPORT NODE WILL CREATE A NEW NODE BASED ON THE TEMPLATE IN THE HTML
+        // https://developer.mozilla.org/en-US/docs/Web/API/Document/importNode
+        const tooltipBody = document.importNode(toolTipTemplate.content,true);
         // SETTING THE DOM MESSAGE FROM THE CONSTRUCTOR 
-        tooltipElement.textContent = this.message;
+        tooltipBody.querySelector('p').textContent = this.message;
+        // tooltipElement.textContent = this.message;
+        tooltipElement.append(tooltipBody)
+
+
+        // GET THE LEFT AND TOP OF THE HOSTELEMENT WHEN WE CREATE A TOOLTIP
+        // hostElemement COMES FROM THE COMPONENT CLASS WHEN EACH INSTANCE IS CREATED
+        const hostElementLeft = this.hostElement.offsetLeft;
+        const hostElementTop = this.hostElement.offsetTop;
+        // GET CLIENT HIEGHT
+        const hostElementHeight = this.hostElement.clientHeight;
+
+        // USING SCROLLTOP TO DETERIME HOW FAR WE HAVE SCROLLED
+        // THE ELEMENT FROM THE TOP OF ITS PARENT
+        const parentElementScrolling = this.hostElement.parentElement.scrollTop;
+        console.log(parentElementScrolling)
+        // getBoundingClientRect IS HANDY FOR GETTING AN ELEMENTS LOCATION
+        // https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
+        console.log(this.hostElement.getBoundingClientRect());
+        // CREATING A POSITION FOR THE TOOL TIP 
+        const x  = hostElementLeft + 20;
+        const y = hostElementTop + hostElementHeight - parentElementScrolling - 10;
+        // SETTING STYLE PROPERTIES ON WHERE TO RENDER THE TOOL TIP
+        tooltipElement.style.position = 'absolute';
+        tooltipElement.style.left = x+'px';
+        tooltipElement.style.top = y+'px';
+
         // ADDING THE EVENT LISTNER TO THE TOOLTIP FOR CLOSE
         tooltipElement.addEventListener('click',this.closeToolTip);
         // SETTING THIS ELEMENT
@@ -71,6 +111,7 @@ class Tooltip extends Component {
         this.attachToolTipElement();
     }
 };
+
 class ProjectItem{
     // KEEPING TRACK OF EACH ITEMS TOOLTIP SO WE ONLY SHOW ONE AT A TIME
     hasActiveToolTip = false;
@@ -110,8 +151,7 @@ class ProjectItem{
             this.updateProjectListsHandler.bind(null,this.id)
         );
     };
-    showMoreInfoHandler(type){
-        console.log(type)
+    showMoreInfoHandler(){
         // CHECK IF THERE IS AN EXISTING TOOLTIP BEING SHOWN FOR THIS ITEM
         if(this.hasActiveToolTip){
             return;
@@ -120,8 +160,11 @@ class ProjectItem{
         const projectElement = document.getElementById(this.id)
         const tooltipMessage = projectElement.dataset.extraInfo
         // IF THERE IS NOT AN EXISTING TOOLTIP CREATE A NEW TOOL TIP WITH CALL BACK FUNCTION
-        const tooltip = new Tooltip(() => this.hasActiveToolTip = false,`${type}-projects`,tooltipMessage);
-        
+        const tooltip = new Tooltip(
+            () => this.hasActiveToolTip = false,
+            tooltipMessage,
+            this.id
+        );
         this.hasActiveToolTip = true;
     }
     // ADD TOOL TIP
@@ -132,7 +175,7 @@ class ProjectItem{
         infoButton = DOMHelper.clearEventListener(infoButton);
 
         infoButton.addEventListener('click',
-            this.showMoreInfoHandler.bind(this,this.listType)
+            this.showMoreInfoHandler.bind(this)
         );
     };
 };
