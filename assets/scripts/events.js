@@ -75,7 +75,8 @@ circle.addEventListener('mouseenter',theButtonClickHandler)
 //     }
     // console.log(eventObject)
 // })
-// THIS APPROCH WONT WORK WE NEED AN EVENT LISTENER
+
+// THIS APPROCH ** WONT ** WORK WE NEED AN EVENT LISTENER
 // TO LISTEN FOR THE SCROLL EVENT
 // const scrollPos = window.scrollY;
 // if(scrollPos === 500){
