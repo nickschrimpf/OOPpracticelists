@@ -37,11 +37,12 @@ body {
   }
 
   #circle{
-    margin-top: 200px;
+    margin-top: 50px;
     background-color: #ff0055;
     height: 150px;
     width: 150px;
-    clip-path: circle(40%);
+    /* clip-path: circle(40%); */
+    border-radius: 100%;
   }
 
   #infinateScroll{

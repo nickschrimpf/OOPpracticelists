@@ -104,8 +104,17 @@ function scrollHandler(e) {
  
 window.addEventListener('scroll', scrollHandler);
 
+// SUBMIT EVENT LISTENER ON A FORM! building blocks for ngSubmit?
+// https://developer.mozilla.org/en-US/docs/Web/API/SubmitEvent/SubmitEvent
 
+const thisForm = document.querySelector('form')
+thisForm.addEventListener('submit',(e)=>{
+    e.preventDefault()
+    console.log(e)
+})
+console.log(thisForm)
 // Event.preventDefault()
 // https://developer.mozilla.org/en-US/docs/Web/API/Event/preventDefault
 // The preventDefault() method of the Event interface tells the user agent that if
 // the event does not get explicitly handled, its default action should not be taken as it normally would be.
+
