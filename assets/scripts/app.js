@@ -242,6 +242,12 @@ class App{
             activeList.addProject.bind(activeList)
         );
     };
+    // LOADING SCRIPTS DYNAMICALLY 
+    static startAnalytics(){
+        const analyticsScript = document.createElement('script');
+        analyticsScript.src = 'assets/scripts/analytics.js';
+        analyticsScript.defer = true;
+    };
 };
 
 App.init();
