@@ -152,7 +152,6 @@ const list = document.querySelector('ul');
 // });
 
 // *** USING PROPIGATION TO ATTACH ONLY ONE EVENT LISTENER TO THE ANCSETOR OF ALL ITEMS
-
 list.addEventListener('click',event => {
     // event.target.classList.toggle('highlight')// THIS WILL CAUSE PROBLEMS WITH MORE COMPLEX LIST ITEMS OR DIVS SEE RESULT HERE
     console.log(event.currentTarget) //REFERS TO THE WHERE THE LISTENER WAS PLACED
