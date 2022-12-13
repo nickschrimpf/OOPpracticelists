@@ -11,7 +11,15 @@
   <body>
     <div>
       <h2>Events in JavaScript</h2>
-      <button>Click me</button>
+        <!-- YOU CAN WRITE AN EVENTLISTENER IN HTML WITH 
+            ONCLICK OR ONDRAG ETC... BUT YOU GENERALLY DO NOT WANT TO DO THIS
+            UNLESS ITS ABSOLUTELY NESSISARY I HAVE USED THIS APPROACH TO INTERACT WITH 3RD PARTY TOOLS
+
+            <button id="theButton" onclick="console.log('click Listener')">Click me</button> -->
+      <button id="theButton">Click me</button>
+      <button id="theSecondButton">Click me, too!</button>
     </div>
+    <div draggable="true" id="circle"></div>
+    
   </body>
 </html>
