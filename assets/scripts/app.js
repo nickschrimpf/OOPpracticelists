@@ -227,33 +227,20 @@ class projectList{
 }
 class App{
     static init(){
-       
         // CREATING A NEW LIST A NEW "ACTIVE" AND "FINISHED" PROJECT LIST TYPES
         const activeList = new projectList('active');
         const finishedList = new projectList('finished');
 
+        
         // SETTING THE CALL BACK FUNCTION FOR LATER USE WHEN A USER CLICKS A BUTTON 
         // THE CALL BACK FUNCTION FROM ONE LIST IS BOUND TO ITSELF SO WHEN ITS CALLED
         //  THIS IS ITS OWN LIST
-
         activeList.setSwitchHanderFunction(
             finishedList.addProject.bind(finishedList)
         );
         finishedList.setSwitchHanderFunction(
             activeList.addProject.bind(activeList)
         );
-        // STARTING ANALYTICS AFTER 3000MS OR 3SECS
-        // https://developer.mozilla.org/en-US/docs/Web/API/setTimeout
-        const startAnalyticsTimerId = setTimeout(this.startAnalytics,3000);
-        
-        document.getElementById('stop-analytics-btn').addEventListener('click',()=> clearTimeout(startAnalyticsTimerId));
-    };
-    // LOADING SCRIPTS DYNAMICALLY 
-    static startAnalytics(){
-        const analyticsScript = document.createElement('script');
-        analyticsScript.src = 'assets/scripts/analytics.js';
-        analyticsScript.defer = true;
-        document.head.append(analyticsScript)
     };
 };
 
