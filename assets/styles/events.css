@@ -43,3 +43,7 @@ body {
     width: 150px;
     clip-path: circle(40%);
   }
+
+  #infinateScroll{
+    height: 600px;
+  }

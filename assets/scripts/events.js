@@ -65,3 +65,46 @@ allButtons.forEach(btn => {
 // is initially moved so that its hotspot is within the element at which the event was fired.
 
 circle.addEventListener('mouseenter',theButtonClickHandler)
+
+// https://developer.mozilla.org/en-US/docs/Web/API/Document/scroll_event
+// USE THIS FOR AN INFANATE SCROLL FEELING BUT CAN BE VERY COSTLY PROFORMANCE WISE
+// window.addEventListener('scroll',(eventObject)=>{
+//     const scrollPos = window.scrollY;
+//     if(scrollPos > 300){
+//         console.log(`fired at ${scrollPos}`)
+//     }
+    // console.log(eventObject)
+// })
+// THIS APPROCH WONT WORK WE NEED AN EVENT LISTENER
+// TO LISTEN FOR THE SCROLL EVENT
+// const scrollPos = window.scrollY;
+// if(scrollPos === 500){
+//     console.log('fired at 500px')
+// }
+
+// IMPLEMENTING A BASIC INFANATE SCROLLING EFFECT
+let curElementNumber = 0;
+ 
+function scrollHandler(e) {
+    
+    // MESSURE THE TOTAL DISTANACE BETWEEN OUR VIEW PORT AND THE END OF 
+    // THE PAGE (NOT JUST THE END OF OUR CURRENTLY VISAIBLE AREA)
+    const distanceToBottom = document.body.getBoundingClientRect().bottom;
+    //  IF THE DISTANCE TO THE BOTTOM IS LESS THEN THE OVERALL HEIGHT OF THE DOCUMENT + 165PX
+    if (distanceToBottom < document.documentElement.clientHeight + 165) {
+        // ONCE THE DISTANCE TO THE BOTTOM IS LESS THEN THE OVERALL CONTENT HIGHT
+        // WE CREATE AN ELEMENT PER EVENT ALLOWING FOR THE INFINATE SCROLLING EFFECT
+        const newDataElement = document.createElement('div');
+        curElementNumber++;
+        newDataElement.innerHTML = `<p>Element ${curElementNumber}</p>`;
+        document.body.append(newDataElement);
+    }
+}
+ 
+window.addEventListener('scroll', scrollHandler);
+
+
+// Event.preventDefault()
+// https://developer.mozilla.org/en-US/docs/Web/API/Event/preventDefault
+// The preventDefault() method of the Event interface tells the user agent that if
+// the event does not get explicitly handled, its default action should not be taken as it normally would be.
