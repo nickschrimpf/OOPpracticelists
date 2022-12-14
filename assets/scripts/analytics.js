@@ -26,7 +26,7 @@
     })
 })()
 
-const analyticsLogger = setInterval(()=>console.log('sending analytic data...'),2000)
+const analyticsLogger = setInterval(()=>console.log('sending analytic data...'),300000)
 
 document.getElementById('stop-analytics-btn').addEventListener('click',() => clearInterval(analyticsLogger))
 

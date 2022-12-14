@@ -111,24 +111,25 @@ class Tooltip extends Component {
         this.attachToolTipElement();
     }
 };
-
 class ProjectItem{
     // KEEPING TRACK OF EACH ITEMS TOOLTIP SO WE ONLY SHOW ONE AT A TIME
     hasActiveToolTip = false;
-    constructor(id,updateProjectListFunction,type){
+    constructor( id, updateProjectListFunction, type){
         // THE ITEMS ID WHEN CREATED BY THE LISTS 
         this.id = id;
         // SETTING LIST TYPE
-        this.listType = type
+        this.listType = type;
         // SETTING THE CALL BACK FUNCTION FROM THE PROJECT
         // LIST TO SWITCH THE LIST ITEM IN THE PROJECT LISTS
         // SET ON THE ITEM BY THE LIST WHEN THE ITME IS CREATED
         this.updateProjectListsHandler = updateProjectListFunction;
+
         // CONNECTING THE BUTTONS IN THEIR OWN METHODS TO KEEP CONSTRUCTOR LEAN
         this.connectSwitchButton(this.listType);
         this.connectMoreInfoButton();
-        // console.log(updateProjectListFunction)
+        this.connectDrag()
     };
+
     update(newUpdateProjectListFn,type){
         // UPDATING THE CALLBACK AFTER THE LISTITEM HAS MOVED
         this.updateProjectListsHandler = newUpdateProjectListFn;
@@ -177,6 +178,27 @@ class ProjectItem{
         infoButton.addEventListener('click',
             this.showMoreInfoHandler.bind(this)
         );
+    };
+    // SETTING UP DRAG EVENT LISTENERS FOR THE ELEMENTS IN OUR LIST
+    // DataTransfer
+    // The DataTransfer object is used to hold the data that is being dragged during a drag and drop operation. 
+    // It may hold one or more data items, each of one or more data types. For more information about drag and drop, 
+    // see HTML Drag and Drop API.
+    connectDrag(){
+        document.getElementById(this.id).addEventListener('dragstart', event => {
+            event.dataTransfer.setData('text/plain',this.id);
+            event.dataTransfer.effectAllowed = "move";
+
+            console.log(event)
+    // DataTransfer.setData()
+    // https://developer.mozilla.org/en-US/docs/Web/API/DataTransfer/setData
+    // The DataTransfer.setData() method sets the drag operation's drag data to the
+    // specified data and type. If data for the given type does not exist, it is added 
+    // at the end of the drag data store, such that the last item in the types list will be
+    // the new type. If data for the given type already exists, the existing data is replaced
+    // in the same position. That is, the order of the types list is not changed when replacing
+    // data of the same type.
+        });
     };
 };
 class projectList{
