@@ -8,13 +8,13 @@ class DOMHelper{
     };
     static moveElement(elementId, newDestinationSelector){
         // GET THE ELEMENT FROM THE DOM
-        const element = document.getElementById(elementId)
+        const element = document.getElementById(elementId);
         // GET THE NEW DESITINATION LIST FROM THE DOM
-        const newDestionation = document.querySelector(newDestinationSelector)
+        const newDestionation = document.querySelector(newDestinationSelector);
         // APPEND THE EXISTING ELEMENT TO THE NEW DESTINATION WILL MOVE THE ELEMENT 
-        newDestionation.append(element)
+        newDestionation.append(element);
         // MAKING SURE THE RECENTLY MOVED ELEMENT IS IN VIEW TO THE USER
-        element.scrollIntoView({behavior:"smooth"})
+        element.scrollIntoView({behavior:"smooth"});
     };
 };
 // PROTO TYPE CLASS RESPONSABLE FOR MANAGING THE TOOL TIPS
@@ -217,15 +217,53 @@ class projectList{
                 new ProjectItem(item.id, this.switchProject.bind(this),this.listType)
             );
         }
-        console.log('projects!')
         console.log(this.projects)
+        
+        this.connectDropZone()
     }
     // SETTING THE ADD PROJECT CALL BACK TO THE OTHER LIST INSTANCE
     setSwitchHanderFunction(switchHanderFunction){
         this.switchHandler = switchHanderFunction;
         // console.log(this.switchHandler)
     }
-
+    connectDropZone(){
+        const dropZone = document.querySelector(`#${this.listType}-projects ul`);
+        console.log(dropZone)
+        dropZone.addEventListener('dragenter',e => {
+            if(e.dataTransfer.types[0] === 'text/plain'){
+                dropZone.parentElement.classList.add('droppable');
+                e.preventDefault();
+            }
+           
+        });
+      
+        dropZone.addEventListener('dragover',e => {
+            if(e.dataTransfer.types[0] === 'text/plain'){
+                console.log(e);
+                e.preventDefault();
+                e.target.closest('li')
+            }
+        });
+        dropZone.addEventListener('dragleave',e => {
+            if(e.relatedTarget.closest(`#${this.listType}-projects ul`) !== dropZone){
+                dropZone.parentElement.classList.remove('droppable')
+            }
+        });
+     
+        // dropZone[0].addEventListener('drop',e => {
+        //     if(e.dataTransfer.types[0] === 'text/plain'){
+        //         e.preventDefault();
+        //         console.log(e.currentTarget);
+        //         console.log(e.target.closest('li').id)
+        //         const projectId = e.target.closest('li').id
+        //         console.log('fired')
+        //         const droppedProj = this.projects.filter(project => project.id === projectId)
+        //         console.log(droppedProj)
+        //         this.addProject(droppedProj[0])
+        //     }
+          
+        // });
+    };
     // CALLBACK FUNCTION CALLED FROM THE OTHER LIST INSTANCE
     addProject(project){
         // PUSHING IN THE ProjectItem FROM THE OTHER LIST
@@ -233,7 +271,6 @@ class projectList{
         // DOMHelper WILL MOVE THE PROJECT FROM LIST TO LIST
       DOMHelper.moveElement(project.id,`#${this.listType}-projects ul`);
         // THE PROJECT WILL NEED TO UPDATE THE TYPE OF BUTTON
-        console.log(this.listType)
       project.update(this.switchProject.bind(this),this.listType)
     }
     
@@ -266,7 +303,7 @@ class App{
         );
         // STARTING ANALYTICS AFTER 3000MS OR 3SECS
         // https://developer.mozilla.org/en-US/docs/Web/API/setTimeout
-        const startAnalyticsTimerId = setTimeout(this.startAnalytics,3000);
+        // const startAnalyticsTimerId = setTimeout(this.startAnalytics,3000);
         
         document.getElementById('stop-analytics-btn').addEventListener('click',()=> clearTimeout(startAnalyticsTimerId));
     };
