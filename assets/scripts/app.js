@@ -250,19 +250,16 @@ class projectList{
             }
         });
      
-        // dropZone[0].addEventListener('drop',e => {
-        //     if(e.dataTransfer.types[0] === 'text/plain'){
-        //         e.preventDefault();
-        //         console.log(e.currentTarget);
-        //         console.log(e.target.closest('li').id)
-        //         const projectId = e.target.closest('li').id
-        //         console.log('fired')
-        //         const droppedProj = this.projects.filter(project => project.id === projectId)
-        //         console.log(droppedProj)
-        //         this.addProject(droppedProj[0])
-        //     }
+        dropZone.addEventListener('drop',e => {
+            if(e.dataTransfer.types[0] === 'text/plain'){
+                const projId = e.dataTransfer.getData('text/plain');
+                if(this.projects.find(p => p.id === projId)){
+                    return;
+                };
+                document.getElementById(projId).lastElementChild.click()
+            }   
           
-        // });
+        });
     };
     // CALLBACK FUNCTION CALLED FROM THE OTHER LIST INSTANCE
     addProject(project){
