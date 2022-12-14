@@ -185,7 +185,9 @@ class ProjectItem{
     // It may hold one or more data items, each of one or more data types. For more information about drag and drop, 
     // see HTML Drag and Drop API.
     connectDrag(){
-        document.getElementById(this.id).addEventListener('dragstart', event => {
+        const item = document.getElementById(this.id)
+        
+        item.addEventListener('dragstart', event => {
             event.dataTransfer.setData('text/plain',this.id);
             event.dataTransfer.effectAllowed = "move";
 
@@ -199,6 +201,9 @@ class ProjectItem{
     // in the same position. That is, the order of the types list is not changed when replacing
     // data of the same type.
         });
+        item.addEventListener('dragend', event => {
+            console.log(event.dataTransfer.dropEffect)//move if the drop is successful
+        })
     };
 };
 class projectList{
@@ -228,7 +233,6 @@ class projectList{
     }
     connectDropZone(){
         const dropZone = document.querySelector(`#${this.listType}-projects ul`);
-        console.log(dropZone)
         dropZone.addEventListener('dragenter',e => {
             if(e.dataTransfer.types[0] === 'text/plain'){
                 dropZone.parentElement.classList.add('droppable');
@@ -239,7 +243,6 @@ class projectList{
       
         dropZone.addEventListener('dragover',e => {
             if(e.dataTransfer.types[0] === 'text/plain'){
-                console.log(e);
                 e.preventDefault();
                 e.target.closest('li')
             }
@@ -256,7 +259,8 @@ class projectList{
                 if(this.projects.find(p => p.id === projId)){
                     return;
                 };
-                document.getElementById(projId).lastElementChild.click()
+                document.getElementById(projId).lastElementChild.click();
+                dropZone.parentElement.classList.remove('droppable');
             }   
           
         });
